@@ -1,11 +1,13 @@
 import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
+import { useDispatch,useSelector } from "react-redux";
+import { signInSuccess,signInStart,signInFailure } from "../redux/user/userSlice";
+import OAuth from "../components/OAuth";
 export default function SignIn(){
   const[fromData, setFormData]=useState({});
-  const[errorMessage,setErrorMessage] = useState(null);
-  const[loading,setLoading]=useState(false);
+ const {loading, error:errorMessage }= useSelector(state=>state.user);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleChange = (e) =>{
     setFormData({...fromData,[e.target.id]:e.target.value.trim()});
@@ -13,27 +15,25 @@ export default function SignIn(){
 const handleSubmit = async(e) =>{
   e.preventDefault();
   if(!fromData.email || !fromData.password){
-    return setErrorMessage('Please fill out all the fields.');
+    return dispatch(signInFailure('please fill all the fields'));
   }
   try{
-    setLoading(true);
-    setErrorMessage(null);
-    const res = await fetch('/api/auth/signip',{
+    dispatch(signInStart());
+    const res = await fetch('/api/auth/signin',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify(fromData),
     });
     const data= await res.json();
     if(data.success === false){
-      return setErrorMessage(data.message);
+      dispatch(signInFailure(data.message));
     }
-    setLoading(false);
     if(res.ok){
+      dispatch(signInSuccess(data));
       navigate('/');
     }
   } catch(error){
-    setErrorMessage(error.message);
-    setLoading(false);
+    dispatch(signInFailure(error.message));
   }
     };
   return(
@@ -69,6 +69,7 @@ const handleSubmit = async(e) =>{
               ):('Sign In')
           }
           </Button>
+          <OAuth></OAuth>
         </form>
         <div className=" flex gap-2 mt-5 text-sm">
           <span>Don't Have an account?</span>
