@@ -1,8 +1,8 @@
-import { Avatar, Button, Dropdown, DropdownDivider, DropdownHeader, DropdownItem, Navbar, NavbarToggle, TextInput } from 'flowbite-react';
+import { Avatar, Button, Dropdown,  Navbar, TextInput } from 'flowbite-react';
 import React from 'react';
 import { Link,useLocation } from 'react-router-dom';
 import {AiOutlineSearch} from 'react-icons/ai';
-import {FaMoon,Fasun} from 'react-icons/fa';
+import {FaMoon,FaSun} from 'react-icons/fa';
 import {useDispatch, useSelector} from 'react-redux';
 import { toggleTheme } from '../redux/theme/themeSlice';
 
@@ -30,7 +30,7 @@ export default function Header() {
     </Button>
     <div className=' flex gap-2 md:order-2'>
         <Button className=' w-12 h-10 hidden sm:inline' color=' gray' pill onClick={()=>dispatch(toggleTheme())}>
-        {theme === 'light' ?  <Fasun/>:<FaMoon/>}
+        {theme === 'light' ?  <FaSun/>:<FaMoon/>}
         </Button>
         {currentUser ? (
             <Dropdown
@@ -58,7 +58,7 @@ export default function Header() {
         ):(
         <Link to='/sign-in'>
             <Button gradientDuoTone='purpleToBlue' outline>
-                SignIn
+                Sign In 
             </Button>
         </Link>
         )}
@@ -66,6 +66,7 @@ export default function Header() {
         </div>
         <Navbar.Collapse>
             <Navbar.Link active={path==="/"} as={'div'}>
+            
                 <Link to="/">
                     Home
                 </Link>
@@ -88,5 +89,6 @@ export default function Header() {
         </Navbar.Collapse>
    
     </Navbar>
-  )
+  ); 
 }
+
